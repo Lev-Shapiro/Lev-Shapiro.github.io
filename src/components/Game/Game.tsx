@@ -9,17 +9,18 @@ import {
     Typography,
 } from "@mui/material";
 
-import { mockQuestions as questions } from "@/mocks/questions";
-
 import { useQuestion } from "./useQuestion";
 
 import { Question } from "../Question/Question";
 
+import { QuestionType } from "@/types/question";
+
 interface GameProps {
-    questionsAmount: number;
+    questions: QuestionType[];
+    clearQuestions: () => void;
 }
 
-export const Game: FC<GameProps> = ({ questionsAmount }) => {
+export const Game: FC<GameProps> = ({ questions, clearQuestions }) => {
     const [selected, setSelected] = useState(-1);
 
     const { setQuestionActive, question, questionActive, ...data } =
@@ -28,13 +29,21 @@ export const Game: FC<GameProps> = ({ questionsAmount }) => {
     const nextQuestion = () => {
         if (selected === -1) return;
 
+        if(questionActive + 1 === questions.length) {
+            return clearQuestions();
+        }
+
         setQuestionActive((prev) => prev + 1);
         setSelected(-1);
     };
 
+    const textIncludingUnicode = new DOMParser().parseFromString(question.question, "text/html").body.textContent;
+
     return (
         <Dialog open={true}>
-            <DialogTitle textAlign="center">{question.question}</DialogTitle>
+            <DialogTitle textAlign="center">
+                {textIncludingUnicode}
+            </DialogTitle>
             <DialogContent
                 sx={{
                     my: 3,
@@ -47,12 +56,23 @@ export const Game: FC<GameProps> = ({ questionsAmount }) => {
                 />
             </DialogContent>
 
-            <Grid container item xs={12} p={2} alignItems="center">
+            <Grid container item xs={12} p={2} gap={2} alignItems="center">
                 <Typography flex={1}>
-                    Question {questionActive + 1} from {questionsAmount}
+                    Question {questionActive + 1} from {questions.length}
                 </Typography>
 
-                <Button onClick={nextQuestion} variant="contained" disabled={selected === -1}>
+                <Button
+                    onClick={clearQuestions}
+                    variant="contained"
+                >
+                    Reset
+                </Button>
+
+                <Button
+                    onClick={nextQuestion}
+                    variant="contained"
+                    disabled={selected === -1}
+                >
                     Next
                 </Button>
             </Grid>

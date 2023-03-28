@@ -14,14 +14,12 @@ import {
 
 interface CreateGameProps {
     open: boolean;
-    handleClose: () => void;
 
     setQuestionsAmount: (amount: number) => void;
 }
 
 export const CreateGame: FC<CreateGameProps> = ({
     open,
-    handleClose,
     setQuestionsAmount,
 }) => {
     const {
@@ -32,7 +30,6 @@ export const CreateGame: FC<CreateGameProps> = ({
 
     const onSubmit: SubmitHandler<FieldValues> = (data) => {
         setQuestionsAmount(data.amount);
-        handleClose();
     };
 
     return (

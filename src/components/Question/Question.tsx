@@ -2,6 +2,8 @@ import { FC } from "react";
 
 import { FormControlLabel, Radio, RadioGroup } from "@mui/material";
 
+import { Check } from "@mui/icons-material";
+
 interface QuestionProps {
     answers: string[];
     selected: number;
@@ -33,10 +35,18 @@ export const Question: FC<QuestionProps> = ({
                     value={index}
                     control={
                         <Radio
+                            icon={
+                                index === correctIndex && selected !== -1 ? (
+                                    <Check color="primary" />
+                                ) : undefined
+                            }
                             color={selected === index ? resultColor : "primary"}
                         />
                     }
-                    label={answer}
+                    label={
+                        new DOMParser().parseFromString(answer, "text/html")
+                            .body.textContent
+                    }
                     disabled={selected != index && selected !== -1}
                 />
             ))}

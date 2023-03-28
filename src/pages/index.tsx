@@ -6,16 +6,23 @@ import { useState } from "react";
 import { CreateGame } from "@/components/CreateGame/CreateGame";
 import { Game } from "@/components/Game/Game";
 
+import { useFetchQuestionsQuery } from "@/features/questions/questions.slice";
+import { Backdrop } from "@mui/material";
+
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
-    const [open, setOpen] = useState(true);
-    const handleClose = () => setOpen(false);
-
     const [amount, setAmount] = useState(0);
+
     const handleSubmit = (amount: number) => {
         setAmount(amount);
     };
+
+    const handleClear = () => setAmount(0);
+
+    const { data, isFetching } = useFetchQuestionsQuery(amount);
+
+    const questions = data?.results;
 
     return (
         <>
@@ -31,13 +38,21 @@ export default function Home() {
                 />
             </Head>
             <main className={styles.main}>
-                <CreateGame
-                    open={open}
-                    handleClose={handleClose}
-                    setQuestionsAmount={handleSubmit}
-                />
+                <CreateGame open={!amount} setQuestionsAmount={handleSubmit} />
 
-                {amount && <Game questionsAmount={amount} />}
+                {amount && isFetching && (
+                    <Backdrop
+                        open={true}
+                        sx={{
+                            color: "#fff",
+                            zIndex: (theme) => theme.zIndex.drawer + 1,
+                        }}
+                    />
+                )}
+
+                {amount && questions?.length && (
+                    <Game questions={questions} clearQuestions={handleClear} />
+                )}
             </main>
         </>
     );
