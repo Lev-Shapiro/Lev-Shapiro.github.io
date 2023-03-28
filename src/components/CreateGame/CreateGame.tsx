@@ -9,8 +9,11 @@ import {
     DialogContent,
     DialogContentText,
     DialogTitle,
+    InputAdornment,
     TextField,
 } from "@mui/material";
+
+import { Numbers } from "@mui/icons-material";
 
 interface CreateGameProps {
     open: boolean;
@@ -33,11 +36,18 @@ export const CreateGame: FC<CreateGameProps> = ({
     };
 
     return (
-        <Dialog open={open}>
-            <DialogTitle>Create game</DialogTitle>
+        <Dialog
+            open={open}
+            PaperProps={{
+                sx: {
+                    borderRadius: "15px",
+                },
+            }}
+        >
+            <DialogTitle textAlign="center">Create game</DialogTitle>
             <form onSubmit={handleSubmit(onSubmit)}>
                 <DialogContent>
-                    <DialogContentText pb={3}>
+                    <DialogContentText pb={3} textAlign="center">
                         To start the game you should enter amount of questions
                         you would like to appear during the game
                     </DialogContentText>
@@ -53,6 +63,13 @@ export const CreateGame: FC<CreateGameProps> = ({
                                 ? "This field is required"
                                 : "Format not valid")
                         }
+                        InputProps={{
+                            startAdornment: (
+                                <InputAdornment position="start">
+                                    <Numbers />
+                                </InputAdornment>
+                            )
+                        }}
                         autoFocus
                         margin="dense"
                         label="Amount of questions"
@@ -61,7 +78,13 @@ export const CreateGame: FC<CreateGameProps> = ({
                     />
                 </DialogContent>
                 <DialogActions>
-                    <Button type="submit" variant="contained">
+                    <Button
+                        type="submit"
+                        variant="contained"
+                        sx={{
+                            margin: "auto",
+                        }}
+                    >
                         Submit
                     </Button>
                 </DialogActions>
