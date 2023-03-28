@@ -15,8 +15,8 @@ export default function Home() {
     const [amount, setAmount] = useState(0);
     const handleSubmit = (amount: number) => {
         setAmount(amount);
-    }
-    
+    };
+
     return (
         <>
             <Head>
@@ -31,11 +31,13 @@ export default function Home() {
                 />
             </Head>
             <main className={styles.main}>
-                <CreateGame open={open} handleClose={handleClose} setQuestionsAmount={handleSubmit} />
+                <CreateGame
+                    open={open}
+                    handleClose={handleClose}
+                    setQuestionsAmount={handleSubmit}
+                />
 
-                {amount && (
-                  <Game questionsAmount={amount}/>
-                )}
+                {amount && <Game questionsAmount={amount} />}
             </main>
         </>
     );

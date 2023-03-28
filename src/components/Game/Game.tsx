@@ -1,7 +1,6 @@
-import { FC, useMemo, useState } from "react";
+import { FC, useState } from "react";
 
 import {
-    Alert,
     Button,
     Dialog,
     DialogContent,
@@ -11,7 +10,8 @@ import {
 } from "@mui/material";
 
 import { mockQuestions as questions } from "@/mocks/questions";
-import { QuestionType } from "@/types/question";
+
+import { useQuestion } from "./useQuestion";
 
 import { Question } from "../Question/Question";
 
@@ -19,98 +19,43 @@ interface GameProps {
     questionsAmount: number;
 }
 
-const mixAnswers = (question: QuestionType) => {
-    const answers = [...question.incorrect_answers],
-        correctIndex = ~~(Math.random() * 4);
-
-    //* insert correct answer at random index
-    answers.splice(correctIndex, 0, question.correct_answer);
-
-    return {
-        answers,
-        correctIndex,
-        selected: -1,
-    };
-};
-
 export const Game: FC<GameProps> = ({ questionsAmount }) => {
-    const [question, setQuestion] = useState(0);
+    const [selected, setSelected] = useState(-1);
+
+    const { setQuestionActive, question, questionActive, ...data } =
+        useQuestion(questions);
+
     const nextQuestion = () => {
-        setMessage(undefined);
-        setMixed(prepareMixed);
-        
-        setQuestion((prev) => prev + 1);
-    };
+        if (selected === -1) return;
 
-    let answer = -1;
-    const setAnswer = (value: number) => (answer = value);
-
-    const [message, setMessage] = useState<["error" | "success", string]>();
-
-    const prepareMixed = useMemo(
-        () => mixAnswers(questions[question]),
-        [question]
-    );
-    const [mixed, setMixed] = useState(prepareMixed);
-
-    const handleSubmit = () => {
-        const correct = answer === mixed.correctIndex;
-
-        setMessage(
-            correct
-                ? ["success", "Answer is correct!"]
-                : ["error", "Answer is wrong!"]
-        );
-
-        setMixed((prev) => ({
-            ...prev,
-            selected: answer,
-        }));
+        setQuestionActive((prev) => prev + 1);
+        setSelected(-1);
     };
 
     return (
         <Dialog open={true}>
-            <DialogTitle textAlign="center">
-                {questions[question].question}
-            </DialogTitle>
-            <>
-                <DialogContent
-                    sx={{
-                        my: 3,
-                    }}
-                >
-                    <Question {...mixed} handleAnswerCorrect={setAnswer} />
-                </DialogContent>
+            <DialogTitle textAlign="center">{question.question}</DialogTitle>
+            <DialogContent
+                sx={{
+                    my: 3,
+                }}
+            >
+                <Question
+                    {...data}
+                    selected={selected}
+                    handleSelect={setSelected}
+                />
+            </DialogContent>
 
-                {message && (
-                    <Alert
-                        sx={{
-                            mb: 3,
-                            mx: "auto",
-                            width: "80%",
-                        }}
-                        severity={message[0]}
-                    >
-                        {message[1]}
-                    </Alert>
-                )}
+            <Grid container item xs={12} p={2} alignItems="center">
+                <Typography flex={1}>
+                    Question {questionActive + 1} from {questionsAmount}
+                </Typography>
 
-                <Grid container item xs={12} p={2} alignItems="center">
-                    <Typography flex={1}>
-                        Question {question + 1} from {questionsAmount}
-                    </Typography>
-
-                    {message ? (
-                        <Button onClick={nextQuestion} variant="contained">
-                            Submit
-                        </Button>
-                    ) : (
-                        <Button onClick={handleSubmit} variant="contained">
-                            Next
-                        </Button>
-                    )}
-                </Grid>
-            </>
+                <Button onClick={nextQuestion} variant="contained" disabled={selected === -1}>
+                    Next
+                </Button>
+            </Grid>
         </Dialog>
     );
 };
