@@ -54,7 +54,8 @@ export const CreateGame: FC<CreateGameProps> = ({
                     <TextField
                         {...register("amount", {
                             required: true,
-                            pattern: /[0-9]+/,
+                            pattern: /^\d+$/,
+                            min: 1
                         })}
                         error={!!errors.amount}
                         helperText={
