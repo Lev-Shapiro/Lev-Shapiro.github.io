@@ -1,56 +1,116 @@
-import { FC, useState } from "react";
+import { FC, useMemo, useState } from "react";
 
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import Paper from "@mui/material/Paper";
-import Typography from "@mui/material/Typography";
+import {
+    Alert,
+    Button,
+    Dialog,
+    DialogContent,
+    DialogTitle,
+    Grid,
+    Typography,
+} from "@mui/material";
 
-import { mockSteps as steps } from "@/mocks/steps";
-import { Dialog, DialogContent, DialogTitle, Grid } from "@mui/material";
+import { mockQuestions as questions } from "@/mocks/questions";
+import { QuestionType } from "@/types/question";
+
+import { Question } from "../Question/Question";
 
 interface GameProps {
     questionsAmount: number;
 }
 
+const mixAnswers = (question: QuestionType) => {
+    const answers = [...question.incorrect_answers],
+        correctIndex = ~~(Math.random() * 4);
+
+    //* insert correct answer at random index
+    answers.splice(correctIndex, 0, question.correct_answer);
+
+    return {
+        answers,
+        correctIndex,
+        selected: -1,
+    };
+};
+
 export const Game: FC<GameProps> = ({ questionsAmount }) => {
     const [question, setQuestion] = useState(0);
+    const nextQuestion = () => {
+        setMessage(undefined);
+        setMixed(prepareMixed);
+        
+        setQuestion((prev) => prev + 1);
+    };
+
+    let answer = -1;
+    const setAnswer = (value: number) => (answer = value);
+
+    const [message, setMessage] = useState<["error" | "success", string]>();
+
+    const prepareMixed = useMemo(
+        () => mixAnswers(questions[question]),
+        [question]
+    );
+    const [mixed, setMixed] = useState(prepareMixed);
 
     const handleSubmit = () => {
-        setQuestion(question + 1);
+        const correct = answer === mixed.correctIndex;
+
+        setMessage(
+            correct
+                ? ["success", "Answer is correct!"]
+                : ["error", "Answer is wrong!"]
+        );
+
+        setMixed((prev) => ({
+            ...prev,
+            selected: answer,
+        }));
     };
 
     return (
         <Dialog open={true}>
             <DialogTitle textAlign="center">
-                Who wants to me a millionaire?
+                {questions[question].question}
             </DialogTitle>
-            <DialogContent>
-                <Paper
-                    square
-                    elevation={0}
+            <>
+                <DialogContent
                     sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        height: 50,
-                        pl: 2,
-                        bgcolor: "background.default",
+                        my: 3,
                     }}
                 >
-                    <Typography>{steps[question].label}</Typography>
-                </Paper>
-                <Box sx={{ height: 255, maxWidth: 400, width: "100%", p: 2 }}>
-                    {steps[question].description}
-                </Box>
-            </DialogContent>
-            <Grid container item xs={12} p={2} alignItems="center">
-                <Typography flex={1}>
-                    Question {question + 1} from {questionsAmount}
-                </Typography>
+                    <Question {...mixed} handleAnswerCorrect={setAnswer} />
+                </DialogContent>
 
-                <Button onClick={handleSubmit} variant="contained">
-                    Submit
-                </Button>
-            </Grid>
+                {message && (
+                    <Alert
+                        sx={{
+                            mb: 3,
+                            mx: "auto",
+                            width: "80%",
+                        }}
+                        severity={message[0]}
+                    >
+                        {message[1]}
+                    </Alert>
+                )}
+
+                <Grid container item xs={12} p={2} alignItems="center">
+                    <Typography flex={1}>
+                        Question {question + 1} from {questionsAmount}
+                    </Typography>
+
+                    {message ? (
+                        <Button onClick={nextQuestion} variant="contained">
+                            Submit
+                        </Button>
+                    ) : (
+                        <Button onClick={handleSubmit} variant="contained">
+                            Next
+                        </Button>
+                    )}
+                </Grid>
+            </>
         </Dialog>
     );
 };
