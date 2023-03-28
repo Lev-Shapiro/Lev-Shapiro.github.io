@@ -36,11 +36,11 @@ export const CreateGame: FC<CreateGameProps> = ({
     };
 
     return (
-        <Dialog open={open} onClose={handleClose}>
+        <Dialog open={open}>
             <DialogTitle>Create game</DialogTitle>
             <form onSubmit={handleSubmit(onSubmit)}>
                 <DialogContent>
-                    <DialogContentText>
+                    <DialogContentText pb={3}>
                         To start the game you should enter amount of questions
                         you would like to appear during the game
                     </DialogContentText>
