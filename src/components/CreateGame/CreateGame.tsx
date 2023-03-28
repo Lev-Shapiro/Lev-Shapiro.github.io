@@ -44,11 +44,14 @@ export const CreateGame: FC<CreateGameProps> = ({
                     <TextField
                         {...register("amount", {
                             required: true,
+                            pattern: /[0-9]+/,
                         })}
                         error={!!errors.amount}
                         helperText={
-                            errors?.amount?.type === "required" &&
-                            "This field is required"
+                            errors.amount &&
+                            (errors.amount.type === "required"
+                                ? "This field is required"
+                                : "Format not valid")
                         }
                         autoFocus
                         margin="dense"
