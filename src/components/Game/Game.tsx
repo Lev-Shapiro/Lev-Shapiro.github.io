@@ -33,8 +33,8 @@ export const Game: FC<GameProps> = ({ questions, clearQuestions }) => {
             return clearQuestions();
         }
 
-        setQuestionActive((prev) => prev + 1);
         setSelected(-1);
+        setQuestionActive((prev) => prev + 1);
     };
 
     const textIncludingUnicode = new DOMParser().parseFromString(question.question, "text/html").body.textContent;

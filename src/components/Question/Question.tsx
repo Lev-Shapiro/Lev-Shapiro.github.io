@@ -26,8 +26,6 @@ export const Question: FC<QuestionProps> = ({
     return (
         <RadioGroup
             onChange={handleChange}
-            aria-labelledby="demo-controlled-radio-buttons-group" // TODO
-            name="controlled-radio-buttons-group"
         >
             {answers.map((answer, index) => (
                 <FormControlLabel
