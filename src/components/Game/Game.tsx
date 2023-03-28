@@ -11,9 +11,9 @@ import {
 
 import { useQuestion } from "./useQuestion";
 
-import { Question } from "../Question/Question";
+import { Question } from "components";
 
-import { QuestionType } from "@/types/question";
+import { QuestionType } from "types/question";
 
 interface GameProps {
     questions: QuestionType[];

@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 
-import { QuestionType } from "@/types/question";
+import { QuestionType } from "types/question";
 
 export const useQuestion = (questions: QuestionType[]) => {
     const [questionActive, setQuestionActive] = useState(0);

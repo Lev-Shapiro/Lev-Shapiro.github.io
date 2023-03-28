@@ -1,15 +1,11 @@
-import styles from "@/styles/Home.module.css";
-import { Inter } from "next/font/google";
-import Head from "next/head";
 import { useState } from "react";
 
-import { CreateGame } from "@/components/CreateGame/CreateGame";
-import { Game } from "@/components/Game/Game";
+import Head from "next/head";
 
-import { useFetchQuestionsQuery } from "@/features/questions/questions.slice";
 import { Backdrop } from "@mui/material";
+import { CreateGame, Game } from "components";
 
-const inter = Inter({ subsets: ["latin"] });
+import { useFetchQuestionsQuery } from "features/questions/questions.slice";
 
 export default function Home() {
     const [amount, setAmount] = useState(0);
@@ -37,7 +33,7 @@ export default function Home() {
                     content="width=device-width, initial-scale=1"
                 />
             </Head>
-            <main className={styles.main}>
+            <main>
                 <CreateGame open={!amount} setQuestionsAmount={handleSubmit} />
 
                 {amount && isFetching && (
