@@ -8,6 +8,7 @@ interface QuestionProps {
     answers: string[];
     selected: number;
     correctIndex: number;
+    questionActive: number;
     handleSelect: (value: number) => void;
 }
 
@@ -15,6 +16,7 @@ export const Question: FC<QuestionProps> = ({
     answers,
     selected,
     correctIndex,
+    questionActive,
     handleSelect,
 }) => {
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -29,8 +31,8 @@ export const Question: FC<QuestionProps> = ({
         >
             {answers.map((answer, index) => (
                 <FormControlLabel
-                    key={index}
-                    value={index}
+                    key={answer}
+                    value={`${questionActive}-${index}`}
                     control={
                         <Radio
                             icon={

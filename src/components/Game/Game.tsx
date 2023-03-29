@@ -51,6 +51,7 @@ export const Game: FC<GameProps> = ({ questions, clearQuestions }) => {
             >
                 <Question
                     {...data}
+                    questionActive={questionActive}
                     selected={selected}
                     handleSelect={setSelected}
                 />
