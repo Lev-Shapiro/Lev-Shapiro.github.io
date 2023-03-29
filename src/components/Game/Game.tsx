@@ -21,7 +21,7 @@ interface GameProps {
 }
 
 export const Game: FC<GameProps> = ({ questions, clearQuestions }) => {
-    const [selected, setSelected] = useState(-1);
+    const [selected, setSelected] = useState<number>(-1);
 
     const { setQuestionActive, question, questionActive, ...data } =
         useQuestion(questions);

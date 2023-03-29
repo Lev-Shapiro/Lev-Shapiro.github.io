@@ -20,15 +20,15 @@ export const Question: FC<QuestionProps> = ({
     handleSelect,
 }) => {
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        handleSelect(Number((event.target as HTMLInputElement).value));
+        const num = (event.target as HTMLInputElement).value.split('-')[1];
+
+        handleSelect(Number(num));
     };
 
     const resultColor = correctIndex === selected ? "success" : "error";
 
     return (
-        <RadioGroup
-            onChange={handleChange}
-        >
+        <RadioGroup onChange={handleChange}>
             {answers.map((answer, index) => (
                 <FormControlLabel
                     key={answer}
