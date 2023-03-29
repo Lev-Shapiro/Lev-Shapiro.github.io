@@ -1,5 +1,7 @@
 Game «Who wants to become a millionaire»
 
+Project online: https://lev-shapiro.github.io/quiz-app/
+
 ## Task:
 
 It is necessary to realize the game on the motives of the television show «Who wants to become a millionaire». As questions and answers, it is necessary to use ready-made datasets, for example https://opentdb.com/api.php?amount=1. The application should realize the functionality of the game with step-by-step questions and the possibility of answers.
